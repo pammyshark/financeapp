@@ -1,9 +1,3 @@
-# financeapp
-Personal Finance Tracker App
-Here’s a creative and engaging README file for your project, incorporating emojis to make it fun and appealing!
-
----
-
 # 💸 Personal Finance Tracker
 
 ## 📚 Project Overview
