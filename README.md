@@ -27,7 +27,7 @@ Follow these steps to set up and use the Personal Finance Tracker:
 
 ### 1️⃣ Prerequisites
 Make sure you have the following installed:
-- 🐍 Python 3.7+
+- 🐍 Python 3.12
 - 📦 Pandas
 - 📊 Matplotlib
 
