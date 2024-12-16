@@ -138,6 +138,78 @@ class TransactionManager:
         """Displays average monthly spending"""
         calculate_avg_monthly_spending(self.data)
 
+    # New functions
+    def monthly_income(self):
+        """Sets monthly income"""
+        try:
+            # Prompt user to delete the transaction index
+            income = int(input("Enter your total monthly income: ").strip())
+            print(f"Your monthly income is set to: ${income}")
+            # Ensure the index exists
+            if income < 0:
+                print("Invalid Income")
+                return
+
+        except ValueError:
+            print("Invalid input.")
+
+    def category_budget(self):
+        """Sets budget by category"""
+        print("--- Top Spending Categories ---")
+
+        # Get unique categories from database
+        get_cat = self.data['Category'].unique()
+
+        # Prompt user to enter budget for each category.
+        input_budget = {}
+        for category in get_cat:
+            while True:
+                try:
+                    budget = int(input(f"Enter your budget {category}: "))
+                    input_budget[category] = budget
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a numeric value.")
+        print("Your budgets have been set:")
+        # Printing each category with the budget that was set up.
+        for category, budget in input_budget.items():
+            print(f"-{category}: {budget}")
+
+    def check_budget_status(self, input_budget):
+        """
+         Compares the user-defined budget (input_budget) with actual spending (analyze_cat)
+    and displays whether categories are within or exceed the budget.
+        """
+        print("--- Budget Status ---")
+        # compare current budget vs budgeted budget.
+        analyze_cat = self.data.groupby('Category')['Amount'].sum()
+
+        # Store the comparison results
+        comparisson = []
+        suggestions = []
+
+        # Compare each category's spending with its budget
+        for category, budget in input_budget.items():
+            spent = analyze_cat.get(category, 0)  # Get actual spending; default to 0 if category is not found
+            if spent > budget:
+                comparisson.append((category, budget, spent))
+                suggestions.append(f"Consider reducing spending in '{category}' or adjusting the budget.")
+            else:
+                comparisson.append((category, budget, spent))
+
+        # Display the analysis
+        print("Category-wise budget comparison:")
+        for category, budget, spent in comparisson:
+            status = "Within Budget" if spent <= budget else "Exceeded Budget"
+            print(f"- {category}: {spent}/{budget} ({status})")
+
+        # Display suggestions
+        if suggestions:
+            print("\nSuggestions:")
+            for suggestion in suggestions:
+                print(f"- {suggestion}")
+        else:
+            print("\nYou are within budget for all categories. Keep up the good work!")
     def top_spending_category(self):
         """Shows top spending category"""
         top_spending_category(self.data)
@@ -154,4 +226,3 @@ class TransactionManager:
             print(f"Transactions saved to {new_csv} successfully!")
         except Exception as e:
             print(f"An error occurred while saving: {e}")
-

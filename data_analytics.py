@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def analyze_category_spending(data):
     """Prints total spending by category"""
     print("--- Total Spending by Category ---")

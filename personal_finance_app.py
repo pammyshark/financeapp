@@ -14,48 +14,36 @@ class PersonalFinanceApp:
             choice = input("Choose an option (0-11): ").strip()
 
             if choice == "0":
-                self.import_csv() # Goes to the import csv place
+                self.import_csv()
             elif choice == "1":
-                self.transaction_manager.view_all()
+                self.view_all_transactions()
             elif choice == "2":
-                if self.functions_instance:
-                    self.functions_instance.view_transactions_by_date()
-                else:
-                    print("Please import a CSV file first.")
+                self.view_transactions_by_date_range()
             elif choice == "3":
-                if self.functions_instance:
-                    self.functions_instance.add_transaction()
-                    # Is putting full date but works
-                else:
-                    print("Please import a CSV file first.")
+                self.add_transaction()
             elif choice == "4":
-                if self.functions_instance:
-                    self.functions_instance.edit_transaction()
-                else:
-                    print("Please import a CSV file first.")
+                self.edit_transaction()
             elif choice == "5":
-                if self.functions_instance:
-                    self.functions_instance.delete_transaction()
-                else:
-                    print("Please import a CSV file first.")
+                self.delete_transaction()
             elif choice == "6":
-                if self.functions_instance:
-                    self.functions_instance.analyze()
-                else:
-                    print("Please import a CSV file first.")
+                self.analyze_spending_by_category()
             elif choice == "7":
-                if self.functions_instance:
-                    self.functions_instance.avg_month()
+                self.calculate_avg_monthly_spending()
             elif choice == "8":
-                if self.functions_instance:
-                    self.functions_instance.top_cat()
+                self.show_top_spending_category()
             elif choice == "9":
-                if self.functions_instance:
-                    self.functions_instance.viz_month()
+                self.monthly_income()
             elif choice == "10":
-                if self.functions_instance:
-                    self.functions_instance.save_csv()
+                self.category_budget()
             elif choice == "11":
+                self.check_budget_status()
+            elif choice == "12": # This is where the old ones moved.
+                self.visualize_monthly_spending_trend()
+            elif choice == "13":
+                self.save_transactions_to_csv()
+                # check budget status
+                # Visualize spending trends
+            elif choice == "14":
                 print("Exiting program. Goodbye!")
                 break
             else:
@@ -72,9 +60,15 @@ class PersonalFinanceApp:
         print("6. Analyze Spending by Category")
         print("7. Calculate Average Monthly Spending")
         print("8. Show Top Spending Category")
-        print("9. Visualize Monthly Spending Trend")
-        print("10. Save Transactions to CSV")
-        print("11. Exit")
+        # New menu implementations
+        print("9. Set Monthly Income")
+        print("10. Set Category Budget")
+        print("11. Check Budget Status")
+        # Here go all the other functions
+        print("12. Visualize Monthly Spending Trend")
+        print("13. Save Transactions to CSV")
+        print("14. Exit")
+        print("15. Test")
 
     def ensure_data_loaded(self):
         """Check if data is loaded before proceeding with transaction operations."""
@@ -128,6 +122,18 @@ class PersonalFinanceApp:
         if self.ensure_data_loaded():
             self.transaction_manager.show_top_spending_category()
 
+    # New functions
+    # put new functions here . The guide its on the menu
+    def monthly_income(self):
+        if self.ensure_data_loaded():
+            self.transaction_manager.monthly_income()
+
+    def category_budget(self):
+        if self.ensure_data_loaded():
+            self.transaction_manager.category_budget()
+    def check_budget_status(self):
+        self.check_budget_status()
+    # These are the old ones
     def visualize_monthly_spending_trend(self):
         if self.ensure_data_loaded():
             self.transaction_manager.visualize_monthly_spending_trend()
