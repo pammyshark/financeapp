@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from data_analytics import (
     analyze_category_spending,
@@ -14,7 +15,7 @@ class TransactionManager:
     def __init__(self, data):
         self.data = data
         self._date_column_verification()
-
+        self.input_budget = {}
     def _date_column_verification(self):
         """
         Ensures that the column is in the right format
@@ -166,42 +167,44 @@ class TransactionManager:
             while True:
                 try:
                     budget = int(input(f"Enter your budget {category}: "))
-                    input_budget[category] = budget
+                    self.input_budget[category] = budget
                     break
                 except ValueError:
                     print("Invalid input. Please enter a numeric value.")
         print("Your budgets have been set:")
         # Printing each category with the budget that was set up.
-        for category, budget in input_budget.items():
+        for category, budget in self.input_budget.items():
             print(f"-{category}: {budget}")
 
-    def check_budget_status(self, input_budget):
+    def check_budget_status(self):
         """
          Compares the user-defined budget (input_budget) with actual spending (analyze_cat)
-    and displays whether categories are within or exceed the budget.
+        and displays whether categories are within or exceed the budget.
         """
         print("--- Budget Status ---")
+
+        # Ensure input_budget exists
+        if not self.input_budget:
+            print("No budgets have been set. Please run `category_budget` first.")
+            return
+
         # compare current budget vs budgeted budget.
         analyze_cat = self.data.groupby('Category')['Amount'].sum()
 
         # Store the comparison results
-        comparisson = []
         suggestions = []
 
         # Compare each category's spending with its budget
-        for category, budget in input_budget.items():
+        for category, budget in self.input_budget.items():
             spent = analyze_cat.get(category, 0)  # Get actual spending; default to 0 if category is not found
             if spent > budget:
-                comparisson.append((category, budget, spent))
+                print(f"- {category}: Spent {spent}/{budget} (Exceeded Budget)")
                 suggestions.append(f"Consider reducing spending in '{category}' or adjusting the budget.")
+            elif spent >= budget * 0.75: # Spending is close to budget (75% or higher)
+                print(f"- {category}: Spent {spent}/{budget} (Warning: Close to budget!)")
             else:
-                comparisson.append((category, budget, spent))
-
-        # Display the analysis
-        print("Category-wise budget comparison:")
-        for category, budget, spent in comparisson:
-            status = "Within Budget" if spent <= budget else "Exceeded Budget"
-            print(f"- {category}: {spent}/{budget} ({status})")
+                #Spending is within the budget
+                print(f"- {category}: Spent {spent}/{budget} (Within Budget)")
 
         # Display suggestions
         if suggestions:
@@ -216,7 +219,43 @@ class TransactionManager:
 
     def visualize_monthly_spending_trend(self):
         """Visualize monthly spending trend"""
+        # This one is in another function in another document
         plot_monthly_spending(self.data)
+        # Bar Chart
+        actual_spending = self.data.groupby('Category')['Amount'].sum()
+
+        # Aligning budget with its categories
+        categories = actual_spending.index  # Categories from the actual spending
+        budgets = [self.input_budget.get(category, 0) for category in categories]
+        spent = actual_spending.values
+
+        # Bar Chart: Actual Spending vs Budget
+        n = len(categories)
+        r = np.arange(n)  # Bar positions
+
+        plt.figure(figsize=(10, 6))
+        plt.bar(r, spent, color='b', width=0.4, edgecolor='black', label='Actual Spending')
+        plt.bar(r + 0.4, budgets, color='g', width=0.4, edgecolor='black', label='Budget')
+
+        plt.xlabel("Category")
+        plt.ylabel("Amount")
+        plt.title("Actual Spending Vs. Budget")
+        plt.xticks(r + 0.2, categories)  # Center the ticks between bars
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+        # Pie Chart: Distribution of Actual Spending
+        plt.figure(figsize=(8, 8))
+        plt.title("Actual Spending Distribution")
+        plt.pie(
+            spent,
+            labels=categories,
+            autopct='%1.1f%%',  # Add percentage values
+            explode=[0.05] * len(categories),  # Slightly explode each slice
+            startangle=140
+        )
+        plt.show()
 
     def save_to_csv(self):
         """Save transactions to a CSV file"""

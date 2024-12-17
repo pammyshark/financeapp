@@ -39,7 +39,7 @@ Make sure you have the following installed:
    ```
 2. Install the required Python packages:
    ```bash
-   pip install pandas matplotlib
+   pip install -r requirements.txt
    ```
 
 ## 🛠️ How to Use

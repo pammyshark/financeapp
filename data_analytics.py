@@ -38,7 +38,7 @@ def plot_monthly_spending(data):
     plt.plot(monthly_spending.index.astype(str), monthly_spending.values, marker='o', linestyle='-', color='b')
     plt.title('Monthly Spending', fontsize=16)
     plt.xlabel('Month (Year-Month)', fontsize=14)
-    plt.ylabel('Total Spending', fontsize=14)
+    plt.ylabel('Amount', fontsize=14)
     plt.xticks(rotation=45)
     plt.grid(alpha=0.5)
     plt.tight_layout()

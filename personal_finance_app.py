@@ -1,3 +1,6 @@
+from data_manager import load_csv
+from transaction_manager import TransactionManager
+
 class PersonalFinanceApp:
     """
     The main application class that handles the user interface and menu navigation.
@@ -60,15 +63,12 @@ class PersonalFinanceApp:
         print("6. Analyze Spending by Category")
         print("7. Calculate Average Monthly Spending")
         print("8. Show Top Spending Category")
-        # New menu implementations
         print("9. Set Monthly Income")
         print("10. Set Category Budget")
         print("11. Check Budget Status")
-        # Here go all the other functions
         print("12. Visualize Monthly Spending Trend")
         print("13. Save Transactions to CSV")
         print("14. Exit")
-        print("15. Test")
 
     def ensure_data_loaded(self):
         """Check if data is loaded before proceeding with transaction operations."""
@@ -79,8 +79,6 @@ class PersonalFinanceApp:
 
     def import_csv(self):
         """Handles importing the CSV file."""
-        from data_manager import load_csv
-        from transaction_manager import TransactionManager
 
         filepath = input("Enter the path to the CSV file: ").strip()
         try:
@@ -122,8 +120,6 @@ class PersonalFinanceApp:
         if self.ensure_data_loaded():
             self.transaction_manager.show_top_spending_category()
 
-    # New functions
-    # put new functions here . The guide its on the menu
     def monthly_income(self):
         if self.ensure_data_loaded():
             self.transaction_manager.monthly_income()
@@ -131,9 +127,10 @@ class PersonalFinanceApp:
     def category_budget(self):
         if self.ensure_data_loaded():
             self.transaction_manager.category_budget()
+
     def check_budget_status(self):
-        self.check_budget_status()
-    # These are the old ones
+        self.transaction_manager.check_budget_status()
+
     def visualize_monthly_spending_trend(self):
         if self.ensure_data_loaded():
             self.transaction_manager.visualize_monthly_spending_trend()
